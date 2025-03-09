@@ -1,6 +1,7 @@
 package com.splitsage.android.ui.screens.expenses
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,13 +41,22 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import java.time.LocalDate
+import com.splitsage.android.data.model.Expense
+import com.splitsage.android.data.model.ExpenseCategory
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpensesScreen(navController: NavController) {
+fun ExpensesScreen(
+    navController: NavController,
+    viewModel: ExpensesViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val currentFilter by viewModel.currentFilter.collectAsState()
+    
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,22 +78,66 @@ fun ExpensesScreen(navController: NavController) {
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            ExpenseFilters()
+            ExpenseFilters(
+                currentFilter = currentFilter,
+                onFilterSelected = { viewModel.setFilter(it) }
+            )
+            
             Spacer(modifier = Modifier.height(16.dp))
-            ExpensesList(expenses = dummyExpenses)
+            
+            when (uiState) {
+                is ExpensesUiState.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+                is ExpensesUiState.Empty -> {
+                    EmptyExpensesState()
+                }
+                is ExpensesUiState.Success -> {
+                    val expenses = (uiState as ExpensesUiState.Success).expenses
+                    ExpensesList(
+                        expenses = expenses,
+                        onExpenseClick = { /* TODO: Navigate to expense details */ },
+                        onExpenseDelete = { viewModel.deleteExpense(it) }
+                    )
+                }
+                is ExpensesUiState.Error -> {
+                    val errorMessage = (uiState as ExpensesUiState.Error).message
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Error: $errorMessage",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
-fun ExpenseFilters() {
+fun ExpenseFilters(
+    currentFilter: ExpenseFilter,
+    onFilterSelected: (ExpenseFilter) -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "All Expenses",
+            text = when (currentFilter) {
+                ExpenseFilter.ALL -> "All Expenses"
+                ExpenseFilter.I_OWE -> "I Owe"
+                ExpenseFilter.IM_OWED -> "I'm Owed"
+            },
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
@@ -110,21 +166,21 @@ fun ExpenseFilters() {
                 DropdownMenuItem(
                     text = { Text("All expenses") },
                     onClick = { 
-                        // TODO: Filter expenses
+                        onFilterSelected(ExpenseFilter.ALL)
                         showMenu = false 
                     }
                 )
                 DropdownMenuItem(
                     text = { Text("I owe") },
                     onClick = { 
-                        // TODO: Filter expenses where user owes money
+                        onFilterSelected(ExpenseFilter.I_OWE)
                         showMenu = false 
                     }
                 )
                 DropdownMenuItem(
                     text = { Text("I'm owed") },
                     onClick = { 
-                        // TODO: Filter expenses where user is owed money
+                        onFilterSelected(ExpenseFilter.IM_OWED)
                         showMenu = false 
                     }
                 )
@@ -134,40 +190,55 @@ fun ExpenseFilters() {
 }
 
 @Composable
-fun ExpensesList(expenses: List<Expense>) {
-    if (expenses.isEmpty()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "No expenses yet",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Add your first expense by tapping the + button",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    } else {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(expenses) { expense ->
-                ExpenseCard(expense = expense)
-            }
-        }
+fun EmptyExpensesState() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "No expenses yet",
+            style = MaterialTheme.typography.titleMedium
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Add your first expense by tapping the + button",
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
 @Composable
-fun ExpenseCard(expense: Expense) {
+fun ExpensesList(
+    expenses: List<Expense>,
+    onExpenseClick: (Expense) -> Unit,
+    onExpenseDelete: (String) -> Unit
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        items(expenses) { expense ->
+            ExpenseCard(
+                expense = expense,
+                onClick = { onExpenseClick(expense) },
+                onDelete = { onExpenseDelete(expense.id) }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExpenseCard(
+    expense: Expense,
+    onClick: () -> Unit,
+    onDelete: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -177,7 +248,7 @@ fun ExpenseCard(expense: Expense) {
         ) {
             // Expense category icon
             Icon(
-                imageVector = expense.icon,
+                imageVector = getCategoryIcon(expense.category),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
@@ -202,82 +273,14 @@ fun ExpenseCard(expense: Expense) {
                 )
             }
             
-            Column(horizontalAlignment = Alignment.End) {
-                val amountText = if (expense.paidBy == "You") {
-                    "You get back"
-                } else {
-                    "Your share"
-                }
-                
-                val amount = if (expense.paidBy == "You") {
-                    expense.amount - expense.yourShare
-                } else {
-                    expense.yourShare
-                }
-                
-                Text(
-                    text = amountText,
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Text(
-                    text = "$${String.format("%.2f", amount)}",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = if (expense.paidBy == "You") 
-                        MaterialTheme.colorScheme.primary 
-                    else 
-                        MaterialTheme.colorScheme.error
-                )
-            }
+            // TODO: Show amount owed or get back based on current user
         }
     }
 }
 
-data class Expense(
-    val id: String,
-    val title: String,
-    val amount: Double,
-    val date: LocalDate,
-    val paidBy: String,
-    val yourShare: Double,
-    val icon: ImageVector
-)
-
-// Dummy data
-val dummyExpenses = listOf(
-    Expense(
-        id = "1",
-        title = "Dinner at Italian Restaurant",
-        amount = 120.0,
-        date = LocalDate.now().minusDays(2),
-        paidBy = "Alex",
-        yourShare = 40.0,
-        icon = Icons.Filled.Restaurant
-    ),
-    Expense(
-        id = "2",
-        title = "Groceries",
-        amount = 85.75,
-        date = LocalDate.now().minusDays(5),
-        paidBy = "You",
-        yourShare = 28.58,
-        icon = Icons.Filled.Restaurant
-    ),
-    Expense(
-        id = "3",
-        title = "Movie Night",
-        amount = 48.0,
-        date = LocalDate.now().minusWeeks(1),
-        paidBy = "Sarah",
-        yourShare = 12.0,
-        icon = Icons.Filled.Restaurant
-    ),
-    Expense(
-        id = "4",
-        title = "Utilities - March",
-        amount = 145.50,
-        date = LocalDate.now().minusWeeks(2),
-        paidBy = "You",
-        yourShare = 48.50,
-        icon = Icons.Filled.Restaurant
-    )
-)
+// Helper function to map category to icon
+@Composable
+fun getCategoryIcon(category: ExpenseCategory): ImageVector {
+    // TODO: Map different categories to different icons
+    return Icons.Filled.Restaurant
+}
