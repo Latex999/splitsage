@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.splitsage.android.R
 import com.splitsage.android.ui.navigation.Screen
 import com.splitsage.android.ui.screens.activity.ActivityScreen
+import com.splitsage.android.ui.screens.expenses.AddExpenseScreen
 import com.splitsage.android.ui.screens.expenses.ExpensesScreen
 import com.splitsage.android.ui.screens.groups.GroupsScreen
 import com.splitsage.android.ui.screens.home.HomeScreen
@@ -49,37 +50,42 @@ fun SplitSageApp() {
     
     Scaffold(
         bottomBar = {
-            NavigationBar {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                
-                items.forEach { screen ->
-                    val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
-                    
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                imageVector = if (selected) screen.selectedIcon else screen.unselectedIcon,
-                                contentDescription = stringResource(id = screen.resourceId)
-                            )
-                        },
-                        label = { Text(stringResource(id = screen.resourceId)) },
-                        selected = selected,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                // Pop up to the start destination of the graph to
-                                // avoid building up a large stack of destinations
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
+            
+            // Only show bottom navigation for main screens
+            val isMainScreen = currentDestination?.route in items.map { it.route }
+            
+            if (isMainScreen) {
+                NavigationBar {
+                    items.forEach { screen ->
+                        val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+                        
+                        NavigationBarItem(
+                            icon = {
+                                Icon(
+                                    imageVector = if (selected) screen.selectedIcon else screen.unselectedIcon,
+                                    contentDescription = stringResource(id = screen.resourceId)
+                                )
+                            },
+                            label = { Text(stringResource(id = screen.resourceId)) },
+                            selected = selected,
+                            onClick = {
+                                navController.navigate(screen.route) {
+                                    // Pop up to the start destination of the graph to
+                                    // avoid building up a large stack of destinations
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    // Avoid multiple copies of the same destination when
+                                    // reselecting the same item
+                                    launchSingleTop = true
+                                    // Restore state when reselecting a previously selected item
+                                    restoreState = true
                                 }
-                                // Avoid multiple copies of the same destination when
-                                // reselecting the same item
-                                launchSingleTop = true
-                                // Restore state when reselecting a previously selected item
-                                restoreState = true
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
@@ -103,6 +109,11 @@ fun SplitSageApp() {
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(navController = navController)
+            }
+            
+            // Additional screens not in the bottom navigation
+            composable(Screen.AddExpense.route) {
+                AddExpenseScreen(navController = navController)
             }
         }
     }
