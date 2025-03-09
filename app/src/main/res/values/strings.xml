@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SplitSage</string>
+    
+    <!-- Auth Screens -->
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="already_have_account">Already have an account? Login</string>
+    <string name="dont_have_account">Don\'t have an account? Sign Up</string>
+    <string name="logout">Logout</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_groups">Groups</string>
+    <string name="nav_expenses">Expenses</string>
+    <string name="nav_activity">Activity</string>
+    <string name="nav_profile">Profile</string>
+    
+    <!-- Home Screen -->
+    <string name="welcome_back">Welcome back, %1$s</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="you_owe">You owe</string>
+    <string name="you_are_owed">You are owed</string>
+    <string name="recent_activity">Recent Activity</string>
+    <string name="view_all">View All</string>
+    <string name="your_groups">Your Groups</string>
+    <string name="create_group">Create Group</string>
+    <string name="join_group">Join Group</string>
+    <string name="settle_up">Settle Up</string>
+    
+    <!-- Groups -->
+    <string name="group_members">Members</string>
+    <string name="add_member">Add Member</string>
+    <string name="remove_member">Remove Member</string>
+    <string name="leave_group">Leave Group</string>
+    <string name="delete_group">Delete Group</string>
+    <string name="group_settings">Group Settings</string>
+    <string name="invite_members">Invite Members</string>
+    <string name="group_expenses">Group Expenses</string>
+    <string name="group_balance">Group Balance</string>
+    <string name="created_on">Created on %1$s</string>
+    <string name="search_groups">Search Groups</string>
+    
+    <!-- Expenses -->
+    <string name="add_expense">Add Expense</string>
+    <string name="edit_expense">Edit Expense</string>
+    <string name="delete_expense">Delete Expense</string>
+    <string name="expense_title">Title</string>
+    <string name="expense_amount">Amount</string>
+    <string name="expense_date">Date</string>
+    <string name="expense_category">Category</string>
+    <string name="expense_notes">Notes</string>
+    <string name="expense_members">Who was involved?</string>
+    <string name="paid_by">Paid by</string>
+    <string name="split_equally">Split equally</string>
+    <string name="split_unequally">Split unequally</string>
+    <string name="split_by_percentage">Split by percentage</string>
+    <string name="split_by_shares">Split by shares</string>
+    <string name="split_by_adjustment">Split by adjustment</string>
+    <string name="add_receipt">Add Receipt</string>
+    <string name="scan_receipt">Scan Receipt</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="expense_added">Expense added successfully</string>
+    <string name="expense_updated">Expense updated successfully</string>
+    <string name="expense_deleted">Expense deleted</string>
+    
+    <!-- Categories -->
+    <string name="category_food">Food</string>
+    <string name="category_drinks">Drinks</string>
+    <string name="category_groceries">Groceries</string>
+    <string name="category_transportation">Transportation</string>
+    <string name="category_accommodation">Accommodation</string>
+    <string name="category_entertainment">Entertainment</string>
+    <string name="category_shopping">Shopping</string>
+    <string name="category_utilities">Utilities</string>
+    <string name="category_health">Health</string>
+    <string name="category_gifts">Gifts</string>
+    <string name="category_travel">Travel</string>
+    <string name="category_other">Other</string>
+    
+    <!-- Activity/History -->
+    <string name="all_activity">All Activity</string>
+    <string name="expense_activity">Expenses</string>
+    <string name="payment_activity">Payments</string>
+    <string name="filter_activity">Filter</string>
+    <string name="no_activity">No activity yet</string>
+    <string name="created_expense">created an expense</string>
+    <string name="edited_expense">edited an expense</string>
+    <string name="deleted_expense">deleted an expense</string>
+    <string name="made_payment">made a payment</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This Week</string>
+    <string name="this_month">This Month</string>
+    <string name="earlier">Earlier</string>
+    
+    <!-- Settlements -->
+    <string name="settle_expenses">Settle Expenses</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="payment_date">Payment Date</string>
+    <string name="payment_notes">Notes</string>
+    <string name="settlement_summary">Settlement Summary</string>
+    <string name="confirm_payment">Confirm Payment</string>
+    <string name="payment_completed">Payment completed</string>
+    <string name="you_paid">You paid %1$s</string>
+    <string name="paid_you">%1$s paid you</string>
+    <string name="settled_up">settled up</string>
+    <string name="simplify_debts">Simplify Debts</string>
+    <string name="record_cash_payment">Record Cash Payment</string>
+    
+    <!-- Profile -->
+    <string name="edit_profile">Edit Profile</string>
+    <string name="name">Name</string>
+    <string name="phone">Phone</string>
+    <string name="account_settings">Account Settings</string>
+    <string name="notification_settings">Notification Settings</string>
+    <string name="payment_methods">Payment Methods</string>
+    <string name="currency">Currency</string>
+    <string name="theme">Theme</string>
+    <string name="help_feedback">Help &amp; Feedback</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="app_version">App Version</string>
+    <string name="faq">FAQ</string>
+    <string name="contact_support">Contact Support</string>
+    
+    <!-- Misc UI Elements -->
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="done">Done</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="edit">Edit</string>
+    <string name="share">Share</string>
+    <string name="search">Search</string>
+    <string name="confirm">Confirm</string>
+    <string name="error">Error</string>
+    <string name="success">Success</string>
+    <string name="loading">Loading…</string>
+    <string name="retry">Retry</string>
+    <string name="select_all">Select All</string>
+    <string name="deselect_all">Deselect All</string>
+    
+    <!-- Error Messages -->
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_network">No internet connection. Please check your network.</string>
+    <string name="error_login">Unable to log in. Please check your credentials.</string>
+    <string name="error_email_format">Please enter a valid email address.</string>
+    <string name="error_password_length">Password must be at least 8 characters long.</string>
+    <string name="error_passwords_dont_match">Passwords don\'t match.</string>
+    <string name="error_field_required">This field is required.</string>
+    <string name="error_invalid_amount">Please enter a valid amount.</string>
+    <string name="error_camera_unavailable">Camera is not available.</string>
+    <string name="error_receipt_scan">Error scanning receipt. Please try again or enter manually.</string>
+</resources>
