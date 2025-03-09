@@ -55,4 +55,12 @@ sealed class Screen(
         selectedIcon = Icons.Filled.AccountCircle,
         unselectedIcon = Icons.Outlined.AccountCircle
     )
+    
+    // Screens not in the bottom navigation
+    object AddExpense : Screen(
+        route = "add_expense",
+        resourceId = R.string.nav_add_expense,
+        selectedIcon = Icons.Filled.List, // Not actually used for this screen
+        unselectedIcon = Icons.Outlined.List // Not actually used for this screen
+    )
 }
