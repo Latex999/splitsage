@@ -45,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.splitsage.android.data.model.Expense
 import com.splitsage.android.data.model.ExpenseCategory
+import com.splitsage.android.ui.navigation.Screen
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -64,7 +65,9 @@ fun ExpensesScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* TODO: Navigate to Add Expense */ }) {
+            FloatingActionButton(onClick = { 
+                navController.navigate(Screen.AddExpense.route)
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Add Expense"
