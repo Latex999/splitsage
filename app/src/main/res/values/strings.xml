@@ -20,6 +20,7 @@
     <string name="nav_expenses">Expenses</string>
     <string name="nav_activity">Activity</string>
     <string name="nav_profile">Profile</string>
+    <string name="nav_add_expense">Add Expense</string>
     
     <!-- Home Screen -->
     <string name="welcome_back">Welcome back, %1$s</string>
